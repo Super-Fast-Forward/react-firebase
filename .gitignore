@@ -17,14 +17,14 @@ jspm_packages/
 # Yarn Integrity file
 .yarn-integrity
 
-# dotenv environment variables file
+# dotenv environment variables file (Keep secrets safe)
 .env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
 
-# parcel-bundler cache (https://parceljs.org/)
+# parcel-bundler cache
 .cache
 
 # Next.js build output
@@ -33,13 +33,12 @@ out
 
 # Nuxt.js build / generate output
 .nuxt
-dist
 
 # Gatsby files
 .cache/
 public
 
-# vuepress build output
+# Vuepress build output
 .vuepress/dist
 
 # Serverless directories
@@ -59,22 +58,22 @@ tmp/
 temp/
 
 # Logs
-logs
+logs/
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
 # Editor directories and files
-.idea
-.vscode
+.idea/
+.vscode/
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
 
-# OS generated files #
+# OS generated files
 .DS_Store
 .DS_Store?
 ._*
@@ -83,18 +82,17 @@ yarn-error.log*
 ehthumbs.db
 Thumbs.db
 
-# Build outputs
-/dist
-/build
-
 # Firebase cache
 .firebase/
 
 # Dependencies
 /node_modules/
 
-# Version control Yarn lock file
-yarn.lock # This should be tracked by git, so don't ignore it
+# Build outputs (🔥 Keep dist for package builds)
+# /dist  ❌ REMOVE this line! (dist should be included in a package)
 
-# Ignore npm lock file as it's no longer needed
-package-lock.json # You can remove this line if it's there
+# Version control lock file (🔥 Keep it for consistent dependencies)
+# yarn.lock ❌ REMOVE this line! (Yarn lock should be committed)
+
+# Ignore npm lock file (🔥 Only use Yarn)
+package-lock.json
