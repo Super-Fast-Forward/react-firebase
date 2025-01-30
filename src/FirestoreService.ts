@@ -264,6 +264,7 @@ export class FirestoreService {
   }
 
   // Get the authenticated user's ID
+  //
   static getAuthUserId(): string | null {
     const auth = getAuth();
     const user: User | null = auth.currentUser;

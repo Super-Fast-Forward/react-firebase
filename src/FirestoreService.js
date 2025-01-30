@@ -169,6 +169,7 @@ export class FirestoreService {
         return writeBatch(this.db);
     }
     // Get the authenticated user's ID
+    //
     static getAuthUserId() {
         const auth = getAuth();
         const user = auth.currentUser;
