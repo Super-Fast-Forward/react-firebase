@@ -15,6 +15,7 @@ persistentLocalCache, // ✅ Fix missing import
 persistentMultipleTabManager, // ✅ Fix missing import
 query, setDoc, Timestamp, updateDoc, // ✅ Fix missing import
 writeBatch, } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 export class FirestoreService {
     // Initialize Firebase app and Firestore
     static initialize(firebaseConfig) {
@@ -168,11 +169,11 @@ export class FirestoreService {
         return writeBatch(this.db);
     }
     // Get the authenticated user's ID
-    // static getAuthUserId(): string | null {
-    //   const auth = getAuth();
-    //   const user: User | null = auth.currentUser;
-    //   return user ? user.uid : null;
-    // }
+    static getAuthUserId() {
+        const auth = getAuth();
+        const user = auth.currentUser;
+        return user ? user.uid : null;
+    }
     /**
      * Get a reference to a Firestore collection.
      * @param collectionPath The path to the collection

@@ -22,6 +22,7 @@ import {
   updateDoc, // ✅ Fix missing import
   writeBatch,
 } from "firebase/firestore";
+import { getAuth, User } from "firebase/auth";
 
 export class FirestoreService {
   private static app: FirebaseApp;
@@ -263,11 +264,11 @@ export class FirestoreService {
   }
 
   // Get the authenticated user's ID
-  // static getAuthUserId(): string | null {
-  //   const auth = getAuth();
-  //   const user: User | null = auth.currentUser;
-  //   return user ? user.uid : null;
-  // }
+  static getAuthUserId(): string | null {
+    const auth = getAuth();
+    const user: User | null = auth.currentUser;
+    return user ? user.uid : null;
+  }
 
   /**
    * Get a reference to a Firestore collection.
