@@ -1,29 +1,27 @@
+import { FirebaseApp, initializeApp } from "@firebase/app";
 import {
-  initializeFirestore,
-  persistentLocalCache,
-  persistentMultipleTabManager,
-  Firestore,
-  doc,
-  collection,
-  getDoc,
-  onSnapshot,
-  query,
-  getDocs,
   addDoc,
-  updateDoc,
+  arrayRemove, // ✅ Fix missing import
+  arrayUnion,
+  collection,
   deleteDoc,
+  deleteField,
+  doc,
+  Firestore,
+  getDoc,
+  getDocs,
+  initializeFirestore, // ✅ Fix missing import
+  onSnapshot, // ✅ Fix missing import
+  persistentLocalCache, // ✅ Fix missing import
+  persistentMultipleTabManager, // ✅ Fix missing import
+  query,
+  Query, // ✅ Fix missing imports
   QueryConstraint,
   setDoc,
-  arrayUnion,
-  arrayRemove,
-  writeBatch,
   Timestamp,
-  FieldValue,
-  deleteField,
-  Query,
+  updateDoc, // ✅ Fix missing import
+  writeBatch,
 } from "firebase/firestore";
-import { FirebaseApp, initializeApp } from "firebase/app";
-import { getAuth, User } from "firebase/auth";
 
 export class FirestoreService {
   private static app: FirebaseApp;
@@ -265,11 +263,11 @@ export class FirestoreService {
   }
 
   // Get the authenticated user's ID
-  static getAuthUserId(): string | null {
-    const auth = getAuth();
-    const user: User | null = auth.currentUser;
-    return user ? user.uid : null;
-  }
+  // static getAuthUserId(): string | null {
+  //   const auth = getAuth();
+  //   const user: User | null = auth.currentUser;
+  //   return user ? user.uid : null;
+  // }
 
   /**
    * Get a reference to a Firestore collection.
