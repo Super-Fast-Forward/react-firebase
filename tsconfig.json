@@ -1,11 +1,14 @@
 {
   "compilerOptions": {
-    "moduleResolution": "node",
+    "outDir": "dist", // 👈 Ensures compiled files go to "dist/"
+    "rootDir": "src",
     "module": "ESNext",
-    "esModuleInterop": true,
-    "strict": true,
+    "moduleResolution": "Node",
     "target": "ES6",
-    "skipLibCheck": true, // ✅ Ignore type errors in node_modules
-    "forceConsistentCasingInFileNames": true
-  }
+    "declaration": true, // Generates .d.ts type declarations
+    "sourceMap": true,
+    "strict": true
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
 }
