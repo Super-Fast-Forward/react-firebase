@@ -115,10 +115,11 @@ export class FirestoreService {
 
   static async setDocument(
     docPath: string,
-    data: Record<string, any>
+    data: Record<string, any>,
+    merge: boolean = true // Default to true but allows overriding
   ): Promise<void> {
     FirestoreService.logRequest();
-    await setDoc(doc(this.db, docPath), data, { merge: true });
+    await setDoc(doc(this.db, docPath), data, { merge });
   }
 
   static async deleteDocument(docPath: string): Promise<void> {
