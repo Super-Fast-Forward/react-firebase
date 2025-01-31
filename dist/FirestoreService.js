@@ -72,10 +72,11 @@ export class FirestoreService {
             yield updateDoc(doc(this.db, docPath), data);
         });
     }
-    static setDocument(docPath, data) {
-        return __awaiter(this, void 0, void 0, function* () {
+    static setDocument(docPath_1, data_1) {
+        return __awaiter(this, arguments, void 0, function* (docPath, data, merge = true // Default to true but allows overriding
+        ) {
             FirestoreService.logRequest();
-            yield setDoc(doc(this.db, docPath), data, { merge: true });
+            yield setDoc(doc(this.db, docPath), data, { merge });
         });
     }
     static deleteDocument(docPath) {

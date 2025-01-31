@@ -18,7 +18,7 @@ export declare class FirestoreService {
     static getDocument<T>(docPath: string): Promise<T | null>;
     static addDocument(collectionPath: string, data: Record<string, any>): Promise<string | undefined>;
     static updateDocument(docPath: string, data: Record<string, any>): Promise<void>;
-    static setDocument(docPath: string, data: Record<string, any>): Promise<void>;
+    static setDocument(docPath: string, data: Record<string, any>, merge?: boolean): Promise<void>;
     static deleteDocument(docPath: string): Promise<void>;
     static subscribeToDocument<T>(docPath: string, callback: (data: T | null) => void): () => void;
     private static logSubscriptionRequest;

@@ -9,7 +9,8 @@
     "build": "tsc",
     "serve": "firebase serve",
     "lint": "eslint src --report-unused-disable-directives --max-warnings 0",
-    "type:check": "tsc --noEmit"
+    "type:check": "tsc --noEmit",
+    "deploy": "yarn build && git add . && git commit -m 'Auto build and deploy' && git push origin main"
   },
   "dependencies": {
     "firebase": "^11.2.0"
