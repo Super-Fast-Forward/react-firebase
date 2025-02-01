@@ -31,19 +31,19 @@ export default class FirestoreService {
 
   private static requestLimits = {
     documentRead: {
-      maxRequestsPerMinute: 100,
+      maxRequestsPerMinute: 200,
       timestamps: new Map<string, number[]>(),
     },
     documentWrite: {
-      maxRequestsPerMinute: 100,
+      maxRequestsPerMinute: 200,
       timestamps: new Map<string, number[]>(),
     },
     collectionRead: {
-      maxRequestsPerMinute: 100,
+      maxRequestsPerMinute: 200,
       timestamps: new Map<string, number[]>(),
     },
     subscription: {
-      maxRequestsPerMinute: 100,
+      maxRequestsPerMinute: 200,
       timestamps: new Map<string, number[]>(),
     },
   };
@@ -162,9 +162,10 @@ export default class FirestoreService {
     callback: (data: T | null) => void
   ): () => void {
     this.enforceRateLimit("subscription", docPath);
-    return onSnapshot(doc(this.db, docPath), (docSnap) => {
+    const unsubscribe = onSnapshot(doc(this.db, docPath), (docSnap) => {
       callback(docSnap.exists() ? (docSnap.data() as T) : null);
     });
+    return unsubscribe;
   }
 
   static subscribeToCollection<T>(
