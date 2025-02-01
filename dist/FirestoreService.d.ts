@@ -11,6 +11,7 @@ export default class FirestoreService {
     static setDoc(docPath: string, data: Record<string, any>, merge?: boolean): Promise<void>;
     static deleteDoc(docPath: string): Promise<void>;
     static subscribeToDoc<T>(docPath: string, callback: (data: T | null) => void): () => void;
+    static subscribeToCollection<T>(collectionPath: string, callback: (data: T[]) => void): () => void;
     static queryDocs<T>(queryInstance: Query): Promise<T[]>;
     static getCollection<T>(collectionPath: string, ...queryConstraints: QueryConstraint[]): Promise<T[]>;
     static getFieldValue(): {

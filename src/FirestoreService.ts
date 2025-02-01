@@ -12,6 +12,7 @@ import {
   getDoc,
   getDocs,
   initializeFirestore,
+  limit,
   onSnapshot,
   persistentLocalCache,
   persistentMultipleTabManager,
@@ -130,6 +131,24 @@ export default class FirestoreService {
     });
   }
 
+  static subscribeToCollection<T>(
+    collectionPath: string,
+    callback: (data: T[]) => void
+  ): () => void {
+    this.enforceRateLimit("subscription", collectionPath);
+    const unsubscribe = onSnapshot(
+      query(collection(this.db, collectionPath)),
+      (snapshot) => {
+        const data = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        })) as T[];
+        callback(data);
+      }
+    );
+    return unsubscribe;
+  }
+
   static async queryDocs<T>(queryInstance: Query): Promise<T[]> {
     this.enforceRateLimit("collectionRead");
     const snapshot = await getDocs(queryInstance);
@@ -141,11 +160,27 @@ export default class FirestoreService {
     ...queryConstraints: QueryConstraint[]
   ): Promise<T[]> {
     this.enforceRateLimit("collectionRead", collectionPath);
-    const snapshot = await getDocs(
-      queryConstraints.length > 0
-        ? query(collection(this.db, collectionPath), ...queryConstraints)
-        : collection(this.db, collectionPath)
+
+    // Check if a limit is already provided
+    const hasLimit = queryConstraints.some(
+      (constraint) => constraint.type === "limit"
     );
+
+    // If a limit is provided, enforce max 100, otherwise set default 100
+    let constraints = queryConstraints.map((constraint) =>
+      constraint.type === "limit"
+        ? limit(Math.min((constraint as any)._limit, 100))
+        : constraint
+    );
+
+    if (!hasLimit) {
+      constraints.push(limit(100));
+    }
+
+    const snapshot = await getDocs(
+      query(collection(this.db, collectionPath), ...constraints)
+    );
+
     return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })) as T[];
   }
 

@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { initializeApp } from "@firebase/app";
 import { getAuth } from "firebase/auth";
-import { addDoc, arrayRemove, arrayUnion, collection, deleteDoc, deleteField, doc, getDoc, getDocs, initializeFirestore, onSnapshot, persistentLocalCache, persistentMultipleTabManager, query, setDoc, Timestamp, updateDoc, writeBatch, } from "firebase/firestore";
+import { addDoc, arrayRemove, arrayUnion, collection, deleteDoc, deleteField, doc, getDoc, getDocs, initializeFirestore, limit, onSnapshot, persistentLocalCache, persistentMultipleTabManager, query, setDoc, Timestamp, updateDoc, writeBatch, } from "firebase/firestore";
 class FirestoreService {
     static initialize(firebaseConfig) {
         if (!this.app) {
@@ -74,6 +74,14 @@ class FirestoreService {
             callback(docSnap.exists() ? docSnap.data() : null);
         });
     }
+    static subscribeToCollection(collectionPath, callback) {
+        this.enforceRateLimit("subscription", collectionPath);
+        const unsubscribe = onSnapshot(query(collection(this.db, collectionPath)), (snapshot) => {
+            const data = snapshot.docs.map((doc) => (Object.assign({ id: doc.id }, doc.data())));
+            callback(data);
+        });
+        return unsubscribe;
+    }
     static queryDocs(queryInstance) {
         return __awaiter(this, void 0, void 0, function* () {
             this.enforceRateLimit("collectionRead");
@@ -84,9 +92,16 @@ class FirestoreService {
     static getCollection(collectionPath, ...queryConstraints) {
         return __awaiter(this, void 0, void 0, function* () {
             this.enforceRateLimit("collectionRead", collectionPath);
-            const snapshot = yield getDocs(queryConstraints.length > 0
-                ? query(collection(this.db, collectionPath), ...queryConstraints)
-                : collection(this.db, collectionPath));
+            // Check if a limit is already provided
+            const hasLimit = queryConstraints.some((constraint) => constraint.type === "limit");
+            // If a limit is provided, enforce max 100, otherwise set default 100
+            let constraints = queryConstraints.map((constraint) => constraint.type === "limit"
+                ? limit(Math.min(constraint._limit, 100))
+                : constraint);
+            if (!hasLimit) {
+                constraints.push(limit(100));
+            }
+            const snapshot = yield getDocs(query(collection(this.db, collectionPath), ...constraints));
             return snapshot.docs.map((doc) => (Object.assign({ id: doc.id }, doc.data())));
         });
     }
