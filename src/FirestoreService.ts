@@ -31,19 +31,19 @@ export default class FirestoreService {
 
   private static requestLimits = {
     documentRead: {
-      maxRequestsPerMinute: 50,
+      maxRequestsPerMinute: 100,
       timestamps: new Map<string, number[]>(),
     },
     documentWrite: {
-      maxRequestsPerMinute: 30,
+      maxRequestsPerMinute: 50,
       timestamps: new Map<string, number[]>(),
     },
     collectionRead: {
-      maxRequestsPerMinute: 20,
+      maxRequestsPerMinute: 50,
       timestamps: new Map<string, number[]>(),
     },
     subscription: {
-      maxRequestsPerMinute: 25,
+      maxRequestsPerMinute: 50,
       timestamps: new Map<string, number[]>(),
     },
   };
