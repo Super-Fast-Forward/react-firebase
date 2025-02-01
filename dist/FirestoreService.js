@@ -129,15 +129,15 @@ FirestoreService.requestLimits = {
         timestamps: new Map(),
     },
     documentWrite: {
-        maxRequestsPerMinute: 50,
+        maxRequestsPerMinute: 100,
         timestamps: new Map(),
     },
     collectionRead: {
-        maxRequestsPerMinute: 50,
+        maxRequestsPerMinute: 100,
         timestamps: new Map(),
     },
     subscription: {
-        maxRequestsPerMinute: 50,
+        maxRequestsPerMinute: 100,
         timestamps: new Map(),
     },
 };
