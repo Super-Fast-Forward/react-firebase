@@ -35,15 +35,15 @@ export default class FirestoreService {
       timestamps: new Map<string, number[]>(),
     },
     documentWrite: {
-      maxRequestsPerMinute: 50,
+      maxRequestsPerMinute: 100,
       timestamps: new Map<string, number[]>(),
     },
     collectionRead: {
-      maxRequestsPerMinute: 50,
+      maxRequestsPerMinute: 100,
       timestamps: new Map<string, number[]>(),
     },
     subscription: {
-      maxRequestsPerMinute: 50,
+      maxRequestsPerMinute: 100,
       timestamps: new Map<string, number[]>(),
     },
   };
