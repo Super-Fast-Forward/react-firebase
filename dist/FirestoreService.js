@@ -21,6 +21,29 @@ class FirestoreService {
             });
         }
     }
+    // private static enforceRateLimit(
+    //   category: keyof typeof FirestoreService.requestLimits,
+    //   key?: string
+    // ): void {
+    //   const now = Date.now();
+    //   const limitConfig = FirestoreService.requestLimits[category];
+    //   if (key) {
+    //     if (!limitConfig.timestamps.has(key)) {
+    //       limitConfig.timestamps.set(key, []);
+    //     }
+    //     const timestamps = limitConfig.timestamps.get(key)!;
+    //     timestamps.push(now);
+    //     limitConfig.timestamps.set(
+    //       key,
+    //       timestamps.filter((ts) => now - ts < 60000)
+    //     );
+    //     if (timestamps.length > limitConfig.maxRequestsPerMinute) {
+    //       throw new Error(
+    //         `Rate limit exceeded for ${category}: ${key}. Please try again later.`
+    //       );
+    //     }
+    //   }
+    // }
     static enforceRateLimit(category, key) {
         const now = Date.now();
         const limitConfig = FirestoreService.requestLimits[category];
@@ -29,11 +52,19 @@ class FirestoreService {
                 limitConfig.timestamps.set(key, []);
             }
             const timestamps = limitConfig.timestamps.get(key);
-            timestamps.push(now);
-            limitConfig.timestamps.set(key, timestamps.filter((ts) => now - ts < 60000));
-            if (timestamps.length > limitConfig.maxRequestsPerMinute) {
+            // Short-term rate limit (per second) to prevent bursts
+            const MAX_REQUESTS_PER_SECOND = 100;
+            const lastSecondRequests = timestamps.filter((ts) => now - ts < 1000);
+            if (lastSecondRequests.length >= MAX_REQUESTS_PER_SECOND) {
+                throw new Error(`Rate limit exceeded for ${category}: ${key}. Too many requests in a short period.`);
+            }
+            // Standard minute-based rate limiting
+            const filteredTimestamps = timestamps.filter((ts) => now - ts < 60000);
+            limitConfig.timestamps.set(key, filteredTimestamps);
+            if (filteredTimestamps.length >= limitConfig.maxRequestsPerMinute) {
                 throw new Error(`Rate limit exceeded for ${category}: ${key}. Please try again later.`);
             }
+            filteredTimestamps.push(now);
         }
     }
     static getDoc(docPath) {
